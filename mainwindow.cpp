@@ -73,7 +73,7 @@ void MainWindow::add_prices() {
     QStringList splits;
     QFile prices_file("prices.csv");
     if (!prices_file.open(QIODevice::ReadOnly | QIODevice::Text))
-        exit(1);
+        qFatal("Could not open prices.csv");
     QTextStream prices_stream(&prices_file);
     while (!prices_stream.atEnd()) {
         //TODO: handle spaces
@@ -142,7 +142,7 @@ void MainWindow::on_cardInput_returnPressed()
         } while (!ok || nick.isEmpty());
         QFile id_file(ID_DIR + id);
         if (!id_file.open(QIODevice::WriteOnly | QIODevice::Text))
-            exit(1);
+            qFatal("Could not create id file");
         QTextStream out(&id_file);
         out << nick;
         id_file.close();
@@ -156,7 +156,7 @@ void MainWindow::on_cardInput_returnPressed()
     // At this point we have the nick of the user, so open the nick file to get the cents the user has
     QFile nick_file(NICK_DIR + nick);
     if (!nick_file.open(QIODevice::ReadWrite | QIODevice::Text))
-        exit(1);
+        qFatal("Could not open nick file for reading");
     QTextStream f(&nick_file);
     f >> cents;
     nick_file.close();
@@ -172,7 +172,7 @@ void MainWindow::on_confirmButton_clicked()
     // Open the nick file and write the balance out to it.
     QFile file(NICK_DIR + nick);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        exit(1);
+        qFatal("Could not open nick file for writing");
     QTextStream f(&file);
     f << cents;
     file.close();
