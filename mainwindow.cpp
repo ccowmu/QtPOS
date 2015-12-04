@@ -9,6 +9,7 @@
 #include <QDir>
 #include <cstdlib>
 #include <openssl/md5.h>
+#include <ctime>
 
 static QString NICK_DIR = "nicks/",
                ID_DIR = "ids/";
@@ -176,7 +177,9 @@ void MainWindow::on_confirmButton_clicked()
     QTextStream f(&file);
     f << cents;
     file.close();
+    addTransaction();
     // "Log out" the user.
+    addTransaction();
     nick.clear();
     cents = 0;
     ui_update();
@@ -192,3 +195,18 @@ void MainWindow::on_cancelButton_clicked()
     cents = 0;
     ui_update();
 }
+
+void MainWindow::addTransaction()
+{
+    QFile file("transactions.txt");
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        qFatal("Could not open transaction file for writing");
+
+    QTextStream f(&file);
+    time_t t = time(0);
+    f << t << " "  << nick << " " << cents << "\n";
+    file.close();
+}
+
+
+

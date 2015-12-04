@@ -21,6 +21,8 @@ private:
 
     void ui_update();
 
+    void addTransaction();
+
 private slots:
     void on_cardInput_returnPressed();
 
