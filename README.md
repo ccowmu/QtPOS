@@ -7,7 +7,9 @@ An attempt at a Point of Sale system for the club office.
 It is best to use QtCreator as your IDE, or at least use QtDesigner to modify
 the .ui file.
 
-We use Qt5.5 and C++11
+We use Qt5.5 and C++11.
+
+You will need OpenSSL installed with development headers.
 
 ## Prices ##
 
