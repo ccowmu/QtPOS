@@ -72,14 +72,17 @@ void MainWindow::add_prices() {
     int cost, i = 0;
     QString line;
     QStringList splits;
+
     QFile prices_file("prices.csv");
     if (!prices_file.open(QIODevice::ReadOnly | QIODevice::Text))
         qFatal("Could not open prices.csv");
     QTextStream prices_stream(&prices_file);
     while (!prices_stream.atEnd()) {
-        //TODO: handle spaces
-        prices_stream >> line;
+        //TODO: handle spaces FIXED?
+        //prices_stream >> line;        THIS WASN'T READING THE ENTIRE LINE. IT STOPPED AT WHITESPACES FOR SOME REASON
+        line = prices_file.readLine(); //THIS HOWEVER READS AND STORES THE ENTIRE LINE
         splits = line.split(',');
+
         if (splits.length() != 2) {
             //TODO: handle other bad line stuff
             break;
