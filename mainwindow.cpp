@@ -83,6 +83,7 @@ void MainWindow::add_prices() {
 
         //TODO: Handle other bad line stuff?
         if (splits.length() != 2) {
+            qDebug(QString("Issue adding item %1").arg(i).toLatin1());
             continue;
         }
 
