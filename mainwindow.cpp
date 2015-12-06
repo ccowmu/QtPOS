@@ -70,6 +70,7 @@ void MainWindow::add_prices() {
     int cost, i = 0;
     QString line;
     QStringList splits;
+
     QFile prices_file("prices.csv");
 
     if (!prices_file.open(QIODevice::ReadOnly | QIODevice::Text))
