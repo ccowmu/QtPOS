@@ -65,8 +65,6 @@ MainWindow::~MainWindow()
  * Parse out the products and prices from "prices.csv"
  *
  * We just assume there are no embedded commas in the "CSV"
- *
- * TODO: We also do not allow any embedded spaces in the fields currently.
  */
 void MainWindow::add_prices() {
     int cost, i = 0;
@@ -74,25 +72,29 @@ void MainWindow::add_prices() {
     QStringList splits;
 
     QFile prices_file("prices.csv");
+
     if (!prices_file.open(QIODevice::ReadOnly | QIODevice::Text))
         qFatal("Could not open prices.csv");
+
     QTextStream prices_stream(&prices_file);
+
     while (!prices_stream.atEnd()) {
-        //TODO: handle spaces FIXED?
-        //prices_stream >> line;        THIS WASN'T READING THE ENTIRE LINE. IT STOPPED AT WHITESPACES FOR SOME REASON
-        line = prices_file.readLine(); //THIS HOWEVER READS AND STORES THE ENTIRE LINE
+        line = prices_stream.readLine();
         splits = line.split(',');
 
+        //TODO: Handle other bad line stuff?
         if (splits.length() != 2) {
-            //TODO: handle other bad line stuff
-            break;
+            qDebug(QString("Issue adding item %1").arg(i).toLatin1());
+            continue;
         }
+
         cost = splits[1].toInt();
         // Whole lot of fiddling around to make the buttons layout well and be pretty.
         QPushButton *button = new QPushButton(QString("%1 (%2)").arg(splits[0]).arg(dollars(cost)), this);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         button->setStyleSheet(cost >= 0 ? GREEN_STYLESHEET : RED_STYLESHEET);
         button->update();
+
         // This is important: we set the slot of the button to modify the user's balance by the items cost.
         // So negative costs deduct from the balance and positive costs add to it (perhaps this is backwards...)
         connect(button, &QPushButton::clicked,

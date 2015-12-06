@@ -23,4 +23,3 @@ item-name,price-in-cents
 A positive "price" actually adds to the user's wallet (when someone pays club),
 and an negative prices subtracts from it (when someone buys something). This
 feels backwards and should probably change.
-
