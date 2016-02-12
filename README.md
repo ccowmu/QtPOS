@@ -23,7 +23,3 @@ item-name,price-in-cents
 A positive "price" actually adds to the user's wallet (when someone pays club),
 and an negative prices subtracts from it (when someone buys something). This
 feels backwards and should probably change.
-
-There is currently a bug whereby there can be no spaces in the name or price,
-and the file is not a true CSV in that there can be no other commas embedded
-in either field.
