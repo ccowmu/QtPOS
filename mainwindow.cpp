@@ -134,6 +134,11 @@ void MainWindow::on_cardInput_returnPressed()
         return;
     }
     // Otherwise we look to see if the id is already known:
+    QString id_in = ui->cardInput->text();
+    if (id_in.length() != 38) {
+        ui->cardInput->clear();
+        return;
+    }
     QString id = md5(ui->cardInput->text());
     ui->cardInput->clear();
     QFile id_file(ID_DIR + id);
@@ -141,9 +146,10 @@ void MainWindow::on_cardInput_returnPressed()
         // If we have never seen this id before we prompt for the nickname to associate with it.
         // The id file is named with the md5 sum of the id and contains the nick in plain text
         bool ok;
-        do {
-             nick = QInputDialog::getText(this, "nick", "nick:", QLineEdit::Normal, "", &ok).remove('/').remove('.');
-        } while (!ok || nick.isEmpty());
+        nick = QInputDialog::getText(this, "nick", "nick:", QLineEdit::Normal, "", &ok).remove('/').remove('.');
+        if (!ok || nick.isEmpty()) {
+            return;
+        }
         QFile id_file(ID_DIR + id);
         if (!id_file.open(QIODevice::WriteOnly | QIODevice::Text))
             qFatal("Could not create id file");
