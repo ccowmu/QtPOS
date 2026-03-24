@@ -1,25 +1,55 @@
-# POS
+# CCaWMU POS
 
-An attempt at a Point of Sale system for the club office.
+Touchscreen Point of Sale system for the CCaWMU (Computer Club at Western Michigan University) office. Members swipe campus ID cards to identify themselves, then tap price buttons to add/subtract from their balance.
 
-## Hacking ##
+## Building
 
-It is best to use QtCreator as your IDE, or at least use QtDesigner to modify
-the .ui file.
+Requires Qt 5.15+, OpenSSL development headers, and a C++11 compiler.
 
-We use Qt5.5 and C++11.
-
-You will need OpenSSL installed with development headers.
-
-## Prices ##
-
-Create a file `prices.csv` in the same directory as the `POS` binary. Each
-line is an item in the form:
-
-```
-item-name,price-in-cents
+```bash
+qmake POS.pro
+make
 ```
 
-A positive "price" actually adds to the user's wallet (when someone pays club),
-and an negative prices subtracts from it (when someone buys something). This
-feels backwards and should probably change.
+The binary must run from the same directory as `prices.csv`, `nicks/`, `ids/`, and `transactions.txt`.
+
+## Features
+
+- **Card-swipe authentication** via MD5 hash of campus ID
+- **Touchscreen price buttons** loaded from `prices.csv`
+- **Dark/light mode** (dark by default, toggle via Admin menu)
+- **Transaction log viewer** (last 200 transactions, color-coded)
+- **Balance/debt viewer** (all users sorted by balance, grand total)
+- **Price editor** (Admin > Edit Prices, with input validation)
+- **Dual logging**: `transactions.txt` (plain text) and `transactions.jsonl` (JSON lines)
+- **CCaWMU branding** with accent colors from cclub.cs.wmich.edu
+
+## Data Files
+
+| File | Description |
+|------|-------------|
+| `prices.csv` | Item prices: `name,cents` (positive = deposit, negative = purchase) |
+| `nicks/` | One file per user, contains balance in cents |
+| `ids/` | MD5 hashes of card IDs mapping to nicknames |
+| `transactions.txt` | Append-only log: `ISO_TIMESTAMP nick balance_after` |
+| `transactions.jsonl` | Append-only JSON log: `{"timestamp":"...","user":"...","balance_after":N}` |
+
+## Prices Convention
+
+Positive values are deposits (money added to account), negative values are purchases:
+
+```csv
+Deposit,100
+Soda,-75
+Monster,-200
+```
+
+## Deployment
+
+The POS auto-starts on boot via GNOME autostart. The `run_pos.sh` script launches the binary and fullscreens the window. Do not modify the window title ("MainWindow") as the fullscreen script depends on it.
+
+Rollback: `mv POS.bak POS` to restore the previous binary.
+
+## Editing with Qt Designer
+
+Use QtCreator or QtDesigner to modify `mainwindow.ui`. Keep the window title as "MainWindow".
